@@ -1,49 +1,65 @@
 var gulp    = require('gulp'),
-    plugins = require('gulp-load-plugins')(),
+    sass    = require('gulp-sass'),
+    sourcemaps = require('gulp-sourcemaps'),
+    watch   = require('gulp-watch');
+    gulp = require('gulp');
+    imagemin = require('gulp-imagemin');
+    pngquant = require('imagemin-pngquant'); // $ npm i -D imagemin-pngquant
 
-    sass        = require('gulp-sass'),
-    sourcemaps  = require('gulp-sourcemaps'),
-    watch       = require('gulp-watch'),
+var timestamp = new Date().getTime();
 
-    imagemin = require('gulp-imagemin'),
-    pngquant = require('imagemin-pngquant'), // $ npm i -D imagemin-pngquant
+var globalConfig = {
+    project: 'yesplus',
+    assets : 'assets',
 
-    timestamp = new Date().getTime();
+    base: '/wp-content/themes/yesplus',
 
-module.exports = {
+    js           : '<%= globalConfig.assets %>/js',
+    css          : '<%= globalConfig.assets %>/css',
+    scss         : '<%= globalConfig.assets %>/scss',
+    scss_includes: '<%= globalConfig.scss %>/includes',
+    bower        : '<%= globalConfig.assets %>/bower_components',
+    img          : '<%= globalConfig.assets %>/img',
 
-        var globalConfig: function() {
-            project: 'yesplus',
-            assets : 'assets',
+    img_src    : '<%= globalConfig.img %>/src',
+    img_min    : '<%= globalConfig.img %>/min/src',
+    img_sprites: '<%= globalConfig.img %>/sprites',
 
-            base: '/wp-content/themes/yesplus',
+    js_min   : '<%= globalConfig.js %>/min',
+    js_concat: '<%= globalConfig.js %>/concat',
+    js_custom: '<%= globalConfig.js %>/<%= globalConfig.project %>',
 
-            gulp_tasks   : '<%= globalConfig.base %>/grunt-tasks',
+    timestamp: timestamp
+};
 
-            js           : '<%= globalConfig.assets %>/js',
-            css          : '<%= globalConfig.assets %>/css',
-            scss         : '<%= globalConfig.assets %>/scss',
-            scss_includes: '<%= globalConfig.scss %>/includes',
-            bower        : '<%= globalConfig.assets %>/bower_components',
-            img          : '<%= globalConfig.assets %>/img',
+gulp.task('default', function(){
+    console.log('hello');
+});
 
-            img_src    : '<%= globalConfig.img %>/src',
-            img_min    : '<%= globalConfig.img %>/min/src',
-            img_sprites: '<%= globalConfig.img %>/sprites',
+gulp.task('sass', function(){
+    gulp.src(globalConfig.scss)
+        .pipe(sass().on('error', sass.logError))
+        .pipe(sourcemaps.init())
+        .pipe(sass())
+        .pipe(sourcemaps.write())
+        .pipe(gulp.dest(globalConfig.css))
+})
 
-            js_min   : '<%= globalConfig.js %>/min',
-            js_concat: '<%= globalConfig.js %>/concat',
-            js_custom: '<%= globalConfig.js %>/<%= globalConfig.project %>',
+gulp.task('sass-watch', function(){
+    gulp.watch(globalConfig.scss, ['sass'])
+})
 
-            timestamp: timestamp
-        }
-}
+gulp.task('imagemin', () => {
+    return gulp.src(globalConfig.img_src)
+        .pipe(imagemin({
+            progressive: true,
+            svgoPlugins: [{removeViewBox: false}],
+            use: [pngquant()]
+        }))
+        .pipe(gulp.dest(globalConfig.img_min));
+});
 
-gulp.task('sass', require('./gulp-tasks/gulp-sass.js')(gulp, plugins));
-gulp.task('sass-watch', require('./gulp-tasks/gulp-sass-watch.js')(gulp, plugins));
-gulp.task('imagemin', require('./gulp-tasks/gulp-imagemin.js')(gulp, plugins));
-
-gulp.task('default', [
+gulp.task('watch', [
     'sass',
     'sass-watch',
     'imagemin'
