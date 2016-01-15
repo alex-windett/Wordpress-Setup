@@ -1,0 +1,35 @@
+//***************************************
+// $$ @Extend Styles for WordPress Icons
+//***************************************
+
+%empty-pseudo-content {
+	content: "" !important;
+}
+%icon-properties {
+	background-position: 50% 2px !important;
+	background-clip: content-box !important;
+	border: 5px solid transparent !important;
+	box-sizing: border-box !important;
+}
+
+//***************************************
+// $$ WordPress Icons
+//***************************************
+
+$menu-icons: 'homeslides', 'homefeatures', 'messages', 'stockists', 'tips', 'affiliates', 'team', 'press', 'faqs', 'case-study';
+@each $menu-icon in $menu-icons {
+	#menu-posts-bf-#{$menu-icon} {
+		.wp-menu-image {
+			background: url(../img/src/admin/#{$menu-icon}-cpt.png) no-repeat 50% -17px !important;
+			&:before {
+				@extend %empty-pseudo-content;
+			}
+		}
+		&:hover,
+		.wp-menu-open {
+			.wp-menu-image {
+				@extend %icon-properties;
+			}
+		}
+	}
+}

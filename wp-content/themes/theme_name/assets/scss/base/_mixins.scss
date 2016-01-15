@@ -1,0 +1,148 @@
+//	************************************
+//	$$ Adding background images
+//	************************************
+
+@mixin pseudo-decoration($image, $width: auto, $height: auto, $base: true, $position: absolute, $top: auto, $right: auto, $bottom: auto, $left: auto) {
+	@if $base {
+		content: "";
+		display: block;
+	}
+	@if $position {
+		position: $position;
+	}
+	top: $top;
+	right: $right;
+	bottom: $bottom;
+	left: $left;
+	@include sprite($image);
+}
+
+@mixin site-container-bg($color) {
+	.site-container{
+		background: $color;
+	}
+}
+
+@mixin opacity($opacity) {
+  opacity: $opacity;
+  $opacity-ie: $opacity * 100;
+  filter: alpha(opacity=$opacity-ie); //IE8
+}
+
+//	************************************
+//	$$ Positioning elements
+//	************************************
+
+// Center images and make the copy aligned with it
+// To do this you need to set the max-width of the parent container to be the width of the image
+@mixin center-elements($max-width) {
+	max-width: rem-calc($max-width);
+	margin:0 auto;
+}
+
+// This is to center absolutely positioned elements.
+@mixin center-absolute-elements($width) {
+	left: 50%;
+	width: $width;
+	margin-left: -$width/2;
+}
+
+// transform
+@mixin transform($transforms) {
+	   -moz-transform: $transforms;
+		 -o-transform: $transforms;
+		-ms-transform: $transforms;
+	-webkit-transform: $transforms;
+			transform: $transforms;
+}
+
+@mixin transition($transition) {
+	   -moz-transition: $transition;
+		 -o-transition: $transition;
+		-ms-transition: $transition;
+	-webkit-transition: $transition;
+			transition: $transition;
+}
+
+// rotate
+@mixin rotate( $degrees ) {
+  -webkit-transform: rotate(#{$degrees}deg); //translateZ(1px)//;
+  -moz-transform: rotate(#{$degrees}deg);
+  -ms-transform: rotate(#{$degrees}deg);
+  -o-transform: rotate(#{$degrees}deg);
+  transform: rotate(#{$degrees}deg);
+ }
+
+// transform
+@mixin translateY($amount) {
+  -webkit-transform: translateY($amount);
+  -moz-transform:    translateY($amount);
+  -ms-transform:     translateY($amount);
+  -o-transform:      translateY($amount);
+  transform:         translateY($amount);
+}
+
+@mixin clearfix() {
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
+
+
+// Vertically center align
+@mixin vertical-align {
+  position: relative;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+@mixin shadow($top, $left, $blur, $color, $inset:"") {
+  -webkit-box-shadow:$top $left $blur $color #{$inset};
+  -moz-box-shadow:$top $left $blur $color #{$inset};
+  box-shadow:$top $left $blur $color #{$inset}; 
+}
+
+@mixin move-z($z-index) {
+	position: relative;
+	z-index: $z-index;
+}
+
+@mixin hover($color, $color-hover) {
+	color: $color;
+
+	&:hover {
+		color: $color-hover;
+
+		@include transition(all 0.5s ease-in-out);
+	}
+}
+
+@mixin background-gradient($direction, $color-1, $color-2) {
+	background: none; // Fallback if linear gradient is not supported
+	background: -webkit-#{$direction}-gradient($color-1, $color-2);
+	background: -o-#{$direction}-gradient($color-1, $color-2);
+	background: -moz-#{$direction}-gradient($color-1, $color-2);
+	background: #{$direction}-gradient($color-1, $color-2);
+}
+
+@mixin columns($count, $gap, $fill) {
+	-webkit-column-count: $count;
+    -webkit-column-gap: rem-calc($gap);
+    -webkit-column-fill: $fill;
+    -moz-column-count: $count;
+    -moz-column-gap: rem-calc($gap); /* 30px */
+    -moz-column-fill: $fill;
+    column-count: $count;
+    column-gap: rem-calc($gap); /* 30px */
+    column-fill: $fill;
+}
+
+@mixin border-radius($value) {
+  -moz-border-radius: $value;
+  -webkit-border-radius: $value;
+  border-radius: $value;
+}

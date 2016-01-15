@@ -1,0 +1,10 @@
+/assets/bower_components/*
+/assets/css/*
+/assets/js/concat/*
+/assets/js/min/*
+/node_modules/*
+/npm-debug.log
+/assets/img/min/*
+/assets/img/sprites/sprite-*.png
+/assets/scss/includes/*
+.sass-cache
