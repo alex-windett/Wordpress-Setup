@@ -16,7 +16,7 @@
 // $$ WordPress Icons
 //***************************************
 
-$menu-icons: 'homeslides', 'homefeatures', 'messages', 'stockists', 'tips', 'affiliates', 'team', 'press', 'faqs', 'case-study';
+$menu-icons: 'homeslides', 'homefeature', 'messages', 'stockists', 'tips', 'affiliates', 'team', 'press', 'faqs', 'case-study';
 @each $menu-icon in $menu-icons {
 	#menu-posts-bf-#{$menu-icon} {
 		.wp-menu-image {

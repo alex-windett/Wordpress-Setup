@@ -54,6 +54,16 @@ gulp.task('sass', () => {
     .pipe(gulp.dest(globalConfig.css));
 })
 
+gulp.task('watch', () => {
+    gulp.watch([
+        globalConfig.scss + '/admin.scss',
+        globalConfig.scss + '/app.scss'
+    ], ['sass'])
+    .on('change', function(event) { 
+        console.log('File' + event.path + ' was ' + event.type + ', running tasks...' );
+    });
+});
+
 // gulp.task('sass-watch', () => {
 //     gulp.watch('./assets/scss/**/*.scss', ['sass'])
 // })
