@@ -1,7 +1,10 @@
 var gulp            = require('gulp'),
     sass            = require('gulp-sass'),
     sourcemaps      = require('gulp-sourcemaps'),
-    concat = require('gulp-concat');
+    concat          = require('gulp-concat'),
+    uglify          = require('gulp-uglify'),
+    rename          = require('gulp-rename'),
+    gutil           = require('gulp-util');
 
 var timestamp = new Date().getTime();
 
@@ -30,7 +33,7 @@ var globalConfig = new function() {
 };
 
 gulp.task('default', () => {
-    console.log(globalConfig.js);
+    console.log(globalConfig.js_concat);
 });
 
 gulp.task('sass', () => {
@@ -63,12 +66,26 @@ gulp.task('watch', () => {
 });
 
 gulp.task('js:concat', () => {
-    return gulp.src(globalConfig.js + '/**/*.js')
+    return gulp.src([
+        globalConfig.js_custom + '/jquery-start.js',
+        globalConfig.js_custom + '/jquery-end.js',
+        globalConfig.js_custom + '/functions/*.js',
+        globalConfig.js_custom + '/doc-ready.js'
+    ])
     .pipe(sourcemaps.init())
     .pipe(concat('app.js'))
     .pipe(sourcemaps.write())
     .pipe(gulp.dest(globalConfig.js_concat))
-})
+});
+
+gulp.task('js:uglify', () => {
+    return gulp.src(globalConfig.js_concat + '/*.js')
+        .pipe(uglify().on('error', gutil.log))
+        .pipe(rename({
+            extname: '.min.js'
+        }))
+        .pipe(gulp.dest(globalConfig.js_min));
+});
 
 
 gulp.task('dev', [
