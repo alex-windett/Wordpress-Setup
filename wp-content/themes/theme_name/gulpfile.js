@@ -64,7 +64,9 @@ gulp.task('watch', () => {
 
 gulp.task('js:concat', () => {
     return gulp.src(globalConfig.js + '/**/*.js')
+    .pipe(sourcemaps.init())
     .pipe(concat('app.js'))
+    .pipe(sourcemaps.write())
     .pipe(gulp.dest(globalConfig.js_concat))
 })
 
