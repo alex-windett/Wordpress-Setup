@@ -80,11 +80,11 @@ gulp.task('js:concat', () => {
 
 gulp.task('js:uglify', () => {
     return gulp.src(globalConfig.js_concat + '/*.js')
-        .pipe(uglify().on('error', gutil.log))
-        .pipe(rename({
-            extname: '.min.js'
-        }))
-        .pipe(gulp.dest(globalConfig.js_min));
+    .pipe(uglify().on('error', gutil.log))
+    .pipe(rename({
+        extname: '.min.js'
+    }))
+    .pipe(gulp.dest(globalConfig.js_min));
 });
 
 
