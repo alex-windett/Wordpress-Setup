@@ -1,18 +1,14 @@
-var gulp    = require('gulp'),
-    sass    = require('gulp-sass'),
-    sourcemaps = require('gulp-sourcemaps'),
-    watch   = require('gulp-watch');
-    gulp = require('gulp');
-    imagemin = require('gulp-imagemin');
-    pngquant = require('imagemin-pngquant'); // $ npm i -D imagemin-pngquant
+var gulp            = require('gulp'),
+    sass            = require('gulp-sass'),
+    sourcemaps      = require('gulp-sourcemaps');
 
 var timestamp = new Date().getTime();
 
 var globalConfig = {
-    project: 'yesplus',
+    project: 'theme_name',
     assets : 'assets',
 
-    base: '/wp-content/themes/yesplus',
+    base: '/wp-content/themes/theme_name',
 
     js           : '<%= globalConfig.assets %>/js',
     css          : '<%= globalConfig.assets %>/css',
@@ -32,35 +28,47 @@ var globalConfig = {
     timestamp: timestamp
 };
 
-gulp.task('default', function(){
+gulp.task('default', () => {
     console.log('hello');
 });
 
-gulp.task('sass', function(){
-    gulp.src(globalConfig.scss)
-        .pipe(sass().on('error', sass.logError))
-        .pipe(sourcemaps.init())
-        .pipe(sass())
-        .pipe(sourcemaps.write())
-        .pipe(gulp.dest(globalConfig.css))
+gulp.task('sass', function() {
+    gulp.src([
+        './assets/scss/app.scss'
+    ])
+    .pipe(sourcemaps.init())
+    .on('error', function(err){
+       displayError(err); // ** Show any errors and continue compiling
+    })
+    .pipe(sass({
+        outputStyle: 'compressed',
+        sourceComments: 'map',
+        includePaths: [
+            './assets/bower_components/foundation/scss/',
+            './assets/bower_components/owl-carousel2/src/scss'
+        ]
+    }))
+    .pipe(sourcemaps.write())
+    // .pipe(sourcemaps.write('./maps')) ** Declare path of map file if neeeded
+    .pipe(gulp.dest('./assets/css'));
 })
 
-gulp.task('sass-watch', function(){
-    gulp.watch(globalConfig.scss, ['sass'])
-})
+// gulp.task('sass-watch', () => {
+//     gulp.watch('./assets/scss/**/*.scss', ['sass'])
+// })
+//
+// gulp.task('imagemin', () => {
+//     return gulp.src(globalConfig.img_src)
+//         .pipe(imagemin({
+//             progressive: true,
+//             svgoPlugins: [{removeViewBox: false}],
+//             use: [pngquant()]
+//         }))
+//         .pipe(gulp.dest(globalConfig.img_min));
+// });
 
-gulp.task('imagemin', () => {
-    return gulp.src(globalConfig.img_src)
-        .pipe(imagemin({
-            progressive: true,
-            svgoPlugins: [{removeViewBox: false}],
-            use: [pngquant()]
-        }))
-        .pipe(gulp.dest(globalConfig.img_min));
-});
-
-gulp.task('watch', [
-    'sass',
-    'sass-watch',
-    'imagemin'
-]);
+// gulp.task('watch', [
+//     'sass',
+//     'sass-watch',
+//     'imagemin'
+// ]);
