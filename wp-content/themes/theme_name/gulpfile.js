@@ -5,36 +5,37 @@ var gulp            = require('gulp'),
 var timestamp = new Date().getTime();
 
 var globalConfig = {
-    project: 'theme_name',
-    assets : 'assets',
+    project         : 'theme_name',
+    assets          : 'assets',
 
-    base: '/wp-content/themes/theme_name',
+    base            : '/wp-content/themes/theme_name',
 
-    js           : '<%= globalConfig.assets %>/js',
-    css          : '<%= globalConfig.assets %>/css',
-    scss         : '<%= globalConfig.assets %>/scss',
-    scss_includes: '<%= globalConfig.scss %>/includes',
-    bower        : '<%= globalConfig.assets %>/bower_components',
-    img          : '<%= globalConfig.assets %>/img',
+    js              : './assets/js',
+    css             : './assets/css',
+    scss            : './assets/scss',
+    scss_includes   : './assets/scss/includes',
+    bower           : './assets/bower_components',
+    img             : './assets/img',
 
-    img_src    : '<%= globalConfig.img %>/src',
-    img_min    : '<%= globalConfig.img %>/min/src',
-    img_sprites: '<%= globalConfig.img %>/sprites',
+    img_src         : './assets/img/src',
+    img_min         : './assets/img/min/src',
+    img_sprites     : './assets/img/sprites',
 
-    js_min   : '<%= globalConfig.js %>/min',
-    js_concat: '<%= globalConfig.js %>/concat',
-    js_custom: '<%= globalConfig.js %>/<%= globalConfig.project %>',
+    js_min          : './assets/js/min',
+    js_concat       : './assets/js/concat',
+    js_custom       : './assets/js/theme_name',
 
-    timestamp: timestamp
+    timestamp       : timestamp
 };
 
 gulp.task('default', () => {
-    console.log('hello');
+    console.log(globalConfig.scss);
 });
 
-gulp.task('sass', function() {
+gulp.task('sass', () => {
     gulp.src([
-        './assets/scss/app.scss'
+        globalConfig.scss + '/app.scss',
+        globalConfig.scss + '/admin.scss'
     ])
     .pipe(sourcemaps.init())
     .on('error', function(err){
@@ -44,13 +45,13 @@ gulp.task('sass', function() {
         outputStyle: 'compressed',
         sourceComments: 'map',
         includePaths: [
-            './assets/bower_components/foundation/scss/',
-            './assets/bower_components/owl-carousel2/src/scss'
+            globalConfig.bower + '/foundation/scss/',
+            globalConfig.bower + '/owl-carousel2/src/scss'
         ]
     }))
     .pipe(sourcemaps.write())
     // .pipe(sourcemaps.write('./maps')) ** Declare path of map file if neeeded
-    .pipe(gulp.dest('./assets/css'));
+    .pipe(gulp.dest(globalConfig.css));
 })
 
 // gulp.task('sass-watch', () => {
