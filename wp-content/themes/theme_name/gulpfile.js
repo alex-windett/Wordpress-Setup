@@ -56,30 +56,15 @@ gulp.task('sass', () => {
 
 gulp.task('watch', () => {
     gulp.watch([
-        globalConfig.scss + '/admin.scss',
-        globalConfig.scss + '/app.scss'
+        globalConfig.scss + '/**/*.scss'
     ], ['sass'])
-    .on('change', function(event) { 
+    .on('change', function(event) {
         console.log('File' + event.path + ' was ' + event.type + ', running tasks...' );
     });
 });
 
-// gulp.task('sass-watch', () => {
-//     gulp.watch('./assets/scss/**/*.scss', ['sass'])
-// })
-//
-// gulp.task('imagemin', () => {
-//     return gulp.src(globalConfig.img_src)
-//         .pipe(imagemin({
-//             progressive: true,
-//             svgoPlugins: [{removeViewBox: false}],
-//             use: [pngquant()]
-//         }))
-//         .pipe(gulp.dest(globalConfig.img_min));
-// });
 
-// gulp.task('watch', [
-//     'sass',
-//     'sass-watch',
-//     'imagemin'
-// ]);
+gulp.task('dev', [
+    'sass',
+    'watch'
+]);
