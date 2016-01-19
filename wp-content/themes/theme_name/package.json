@@ -18,6 +18,7 @@
     "grunt-svgmin": "^1.0.0",
     "grunt-text-replace": "^0.3.12",
     "gulp": "^3.9.0",
+    "gulp-clean": "^0.3.1",
     "gulp-concat": "^2.6.0",
     "gulp-imagemin": "^2.4.0",
     "gulp-livereload": "^3.8.1",

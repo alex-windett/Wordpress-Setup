@@ -4,7 +4,8 @@ var gulp            = require('gulp'),
     concat          = require('gulp-concat'),
     uglify          = require('gulp-uglify'),
     rename          = require('gulp-rename'),
-    gutil           = require('gulp-util');
+    gutil           = require('gulp-util')
+    clean           = require('gulp-clean');
 
 var timestamp = new Date().getTime();
 
@@ -28,6 +29,7 @@ var globalConfig = new function() {
     this.js_min          = this.js + '/min',
     this.js_concat       = this.js + '/concat',
     this.js_custom       = this.js + '/theme_name',
+    this.js_vendor       = this.js + '/vendor',
 
     this.timestamp       = timestamp
 };
@@ -70,7 +72,8 @@ gulp.task('js:concat', () => {
         globalConfig.js_custom + '/jquery-start.js',
         globalConfig.js_custom + '/jquery-end.js',
         globalConfig.js_custom + '/functions/*.js',
-        globalConfig.js_custom + '/doc-ready.js'
+        globalConfig.js_custom + '/doc-ready.js',
+        globalConfig.vendor
     ])
     .pipe(sourcemaps.init())
     .pipe(concat('app.js'))
@@ -87,6 +90,16 @@ gulp.task('js:uglify', () => {
     .pipe(gulp.dest(globalConfig.js_min));
 });
 
+gulp.task('clean', () => {
+    return gulp.src([
+        globalConfig.css + '/**/*.css',
+        globalConfig.js_concat + '/**/*.js',
+        globalConfig.js_min + '/**/*.js',
+        globalConfig.img_min + '/**/*',
+        globalConfig.img_sprites + '/sprite-*-*.png'
+    ], { read: false })
+    .pipe(clean());
+});
 
 gulp.task('dev', [
     'sass',
