@@ -4,32 +4,32 @@ var gulp            = require('gulp'),
 
 var timestamp = new Date().getTime();
 
-var globalConfig = {
-    project         : 'theme_name',
-    assets          : 'assets',
+var globalConfig = new function() {
+    this.project         = 'theme_name',
+    this.assets          = 'assets',
 
-    base            : '/wp-content/themes/theme_name',
+    this.base            = '/wp-content/themes/' + this.project ,
 
-    js              : './assets/js',
-    css             : './assets/css',
-    scss            : './assets/scss',
-    scss_includes   : './assets/scss/includes',
-    bower           : './assets/bower_components',
-    img             : './assets/img',
+    this.js              = this.assets + '/js',
+    this.css             = this.assets + '/css',
+    this.scss            = this.assets + '/scss',
+    this.scss_includes   = this.scss + ' /includes',
+    this.bower           = this.assets + '/bower_components',
+    this.img             = this.assets + '/img',
 
-    img_src         : './assets/img/src',
-    img_min         : './assets/img/min/src',
-    img_sprites     : './assets/img/sprites',
+    this.img_src         = this.img + '/src',
+    this.img_min         = this.img + '/min/src',
+    this.img_sprites     = this.img + '/sprites',
 
-    js_min          : './assets/js/min',
-    js_concat       : './assets/js/concat',
-    js_custom       : './assets/js/theme_name',
+    this.js_min          = this.js + '/min',
+    this.js_concat       = this.js + '/concat',
+    this.js_custom       = this.js + '/theme_name',
 
-    timestamp       : timestamp
+    this.timestamp       = timestamp
 };
 
 gulp.task('default', () => {
-    console.log(globalConfig.scss);
+    console.log(globalConfig.js);
 });
 
 gulp.task('sass', () => {
