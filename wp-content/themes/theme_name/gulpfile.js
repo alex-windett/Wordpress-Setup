@@ -1,6 +1,7 @@
 var gulp            = require('gulp'),
     sass            = require('gulp-sass'),
-    sourcemaps      = require('gulp-sourcemaps');
+    sourcemaps      = require('gulp-sourcemaps'),
+    concat = require('gulp-concat');
 
 var timestamp = new Date().getTime();
 
@@ -55,13 +56,17 @@ gulp.task('sass', () => {
 })
 
 gulp.task('watch', () => {
-    gulp.watch([
-        globalConfig.scss + '/**/*.scss'
-    ], ['sass'])
+    gulp.watch([ globalConfig.scss + '/**/*.scss' ], ['sass'])
     .on('change', function(event) {
         console.log('File' + event.path + ' was ' + event.type + ', running tasks...' );
     });
 });
+
+gulp.task('js:concat', () => {
+    return gulp.src(globalConfig.js + '/**/*.js')
+    .pipe(concat('app.js'))
+    .pipe(gulp.dest(globalConfig.js_concat))
+})
 
 
 gulp.task('dev', [
