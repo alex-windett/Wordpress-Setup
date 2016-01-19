@@ -34,10 +34,6 @@ var globalConfig = new function() {
     this.timestamp       = timestamp
 };
 
-gulp.task('default', () => {
-    console.log(globalConfig.js_concat);
-});
-
 gulp.task('sass', () => {
     gulp.src([
         globalConfig.scss + '/app.scss',
@@ -61,7 +57,13 @@ gulp.task('sass', () => {
 })
 
 gulp.task('watch', () => {
-    gulp.watch([ globalConfig.scss + '/**/*.scss' ], ['sass'])
+    gulp.watch([
+        globalConfig.scss + '/**/*.scss',
+        globalConfig.js + '/**/*.js'
+    ], [
+        'sass',
+        'js:concat'
+    ])
     .on('change', function(event) {
         console.log('File' + event.path + ' was ' + event.type + ', running tasks...' );
     });
@@ -73,7 +75,7 @@ gulp.task('js:concat', () => {
         globalConfig.js_custom + '/jquery-end.js',
         globalConfig.js_custom + '/functions/*.js',
         globalConfig.js_custom + '/doc-ready.js',
-        globalConfig.vendor
+        globalConfig.vendor + '/*.js'
     ])
     .pipe(sourcemaps.init())
     .pipe(concat('app.js'))
@@ -101,7 +103,17 @@ gulp.task('clean', () => {
     .pipe(clean());
 });
 
+gulp.task('common', [
+    'js:concat',
+    'js:uglify',
+    'sass'
+]);
+
 gulp.task('dev', [
-    'sass',
+    'common',
     'watch'
 ]);
+
+gulp.task('default', () => {
+    console.log(globalConfig.js_concat);
+});
