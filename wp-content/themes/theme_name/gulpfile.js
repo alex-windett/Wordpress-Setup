@@ -7,7 +7,8 @@ var gulp            = require('gulp'),
     gutil           = require('gulp-util'),
     clean           = require('gulp-clean'),
     spritesmith     = require('gulp.spritesmith'),
-    requireDir      = require('require-dir');
+    requireDir      = require('require-dir'),
+    imagemin        = require('gulp-imagemin');
 
 var timestamp = new Date().getTime();
 
@@ -37,6 +38,12 @@ var globalConfig = new function() {
 };
 
 // requireDir('./gulp-tasks', { recursive: true });
+
+gulp.task('imagemin', () => {
+    return gulp.src(globalConfig.img_src + '/**/*')
+        .pipe(imagemin({ progressive: true }))
+        .pipe(gulp.dest(globalConfig.img_min));
+});
 
 gulp.task('sass', () => {
     gulp.src([
@@ -102,7 +109,6 @@ gulp.task('js:uglify', () => {
 gulp.task('clean', () => {
     return gulp.src([
         globalConfig.css + '/**/*.css',
-        globalConfig.css + '/**/*.scss',
         globalConfig.js_concat + '/**/*.js',
         globalConfig.js_min + '/**/*.js',
         globalConfig.img_min + '/**/*',
