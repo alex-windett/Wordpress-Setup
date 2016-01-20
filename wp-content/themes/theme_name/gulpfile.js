@@ -8,7 +8,9 @@ var gulp            = require('gulp'),
     clean           = require('gulp-clean'),
     spritesmith     = require('gulp.spritesmith'),
     requireDir      = require('require-dir'),
-    imagemin        = require('gulp-imagemin');
+    imagemin        = require('gulp-imagemin'),
+    newer           = require('gulp-newer'),
+    livereload      = require('gulp-livereload');
 
 var timestamp = new Date().getTime();
 
@@ -41,6 +43,7 @@ var globalConfig = new function() {
 
 gulp.task('imagemin', () => {
     return gulp.src(globalConfig.img_src + '/**/*')
+        .pipe(newer(globalConfig.img_min))
         .pipe(imagemin({ progressive: true }))
         .pipe(gulp.dest(globalConfig.img_min));
 });
@@ -64,19 +67,31 @@ gulp.task('sass', () => {
     }))
     .pipe(sourcemaps.write())
     // .pipe(sourcemaps.write('./maps')) ** Declare path of map file if neeeded
-    .pipe(gulp.dest(globalConfig.css));
+    .pipe(gulp.dest(globalConfig.css))
+    .pipe(livereload());
 })
 
+gulp.task('serve', () => {
+    var express = require('express');
+    var app     = express();
+    app.use(express.static(__dirname + '/app'));
+    app.listen(4000, function(){
+        done();
+    });
+});
 
 gulp.task('watch', () => {
+    livereload.listen();
     gulp.watch([
         globalConfig.scss + '/**/*.scss',
         globalConfig.js + '/**/*.js',
-        globalConfig.img_sprites + '/*.png'
+        globalConfig.img_sprites + '/*.png',
+        globalConfig.img_src + '/**/*'
     ], [
         'sass',
         'js:concat',
-        'spritesmith'
+        // 'sprites',
+        'imagemin'
     ])
     .on('change', function(event) {
         console.log('File' + event.path + ' was ' + event.type + ', running tasks...' );
@@ -92,9 +107,11 @@ gulp.task('js:concat', () => {
         globalConfig.vendor + '/*.js'
     ])
     .pipe(sourcemaps.init())
+    .pipe(newer(globalConfig.js_concat + '/app.js'))
     .pipe(concat('app.js'))
     .pipe(sourcemaps.write())
     .pipe(gulp.dest(globalConfig.js_concat))
+    .pipe(livereload());
 });
 
 gulp.task('js:uglify', () => {
@@ -124,7 +141,8 @@ gulp.task('spritesmith:deco', () => {
             cssName: '_sprites-deco.scss'
         }));
     spriteData.img.pipe(gulp.dest(globalConfig.img_sprites));
-    spriteData.css.pipe(gulp.dest(globalConfig.scss + '/includes'));
+    spriteData.css.pipe(gulp.dest(globalConfig.scss + '/includes'))
+    .pipe(livereload());
 });
 
 gulp.task('spritesmith:icn', () => {
@@ -134,7 +152,8 @@ gulp.task('spritesmith:icn', () => {
             cssName: '_sprites-icn.scss'
         }));
     spriteData.img.pipe(gulp.dest(globalConfig.img_sprites));
-    spriteData.css.pipe(gulp.dest(globalConfig.scss + '/includes'));
+    spriteData.css.pipe(gulp.dest(globalConfig.scss + '/includes'))
+    .pipe(livereload());
 });
 
 gulp.task('sprites', [
@@ -155,5 +174,6 @@ gulp.task('dev', [
 ]);
 
 gulp.task('default', [
+    'imagemin', // includes the "newer" task already
     'common'
 ]);
