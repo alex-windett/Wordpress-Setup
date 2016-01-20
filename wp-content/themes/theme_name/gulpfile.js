@@ -54,53 +54,12 @@ taskList.forEach(function (taskFile) {
     console.log(taskFile);
 });
 
-// gulp.task('sass', () => {
-//     gulp.src([
-//         globalConfig.scss + '/app.scss',
-//         globalConfig.scss + '/admin.scss'
-//     ])
-//     .pipe(sourcemaps.init())
-//     .on('error', function(err){
-//        displayError(err); // ** Show any errors and continue compiling
-//     })
-//     .pipe(sass({
-//         outputStyle: 'compressed',
-//         sourceComments: 'map',
-//         includePaths: [
-//             globalConfig.bower + '/foundation/scss/',
-//             globalConfig.bower + '/owl-carousel2/src/scss'
-//         ]
-//     }))
-//     .pipe(sourcemaps.write())
-//     // .pipe(sourcemaps.write('./maps')) ** Declare path of map file if neeeded
-//     .pipe(gulp.dest(globalConfig.css))
-//     .pipe(livereload());
-// })
-
 gulp.task('serve', () => {
     var express = require('express');
     var app     = express();
     app.use(express.static(__dirname + '/app'));
     app.listen(4000, function(){
         done();
-    });
-});
-
-gulp.task('watch', () => {
-    livereload.listen();
-    gulp.watch([
-        globalConfig.scss + '/**/*.scss',
-        globalConfig.js + '/**/*.js',
-        globalConfig.img_sprites + '/*.png',
-        globalConfig.img_src + '/**/*'
-    ], [
-        'sass',
-        'js:concat',
-        // 'sprites',
-        'imagemin'
-    ])
-    .on('change', function(event) {
-        console.log('File' + event.path + ' was ' + event.type + ', running tasks...' );
     });
 });
 
