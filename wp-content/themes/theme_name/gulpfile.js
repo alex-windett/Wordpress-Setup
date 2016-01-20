@@ -4,8 +4,10 @@ var gulp            = require('gulp'),
     concat          = require('gulp-concat'),
     uglify          = require('gulp-uglify'),
     rename          = require('gulp-rename'),
-    gutil           = require('gulp-util')
-    clean           = require('gulp-clean');
+    gutil           = require('gulp-util'),
+    clean           = require('gulp-clean'),
+    spritesmith     = require('gulp.spritesmith'),
+    requireDir      = require('require-dir');
 
 var timestamp = new Date().getTime();
 
@@ -34,6 +36,8 @@ var globalConfig = new function() {
     this.timestamp       = timestamp
 };
 
+// requireDir('./gulp-tasks', { recursive: true });
+
 gulp.task('sass', () => {
     gulp.src([
         globalConfig.scss + '/app.scss',
@@ -56,13 +60,16 @@ gulp.task('sass', () => {
     .pipe(gulp.dest(globalConfig.css));
 })
 
+
 gulp.task('watch', () => {
     gulp.watch([
         globalConfig.scss + '/**/*.scss',
-        globalConfig.js + '/**/*.js'
+        globalConfig.js + '/**/*.js',
+        globalConfig.img_sprites + '/*.png'
     ], [
         'sass',
-        'js:concat'
+        'js:concat',
+        'spritesmith'
     ])
     .on('change', function(event) {
         console.log('File' + event.path + ' was ' + event.type + ', running tasks...' );
@@ -95,15 +102,42 @@ gulp.task('js:uglify', () => {
 gulp.task('clean', () => {
     return gulp.src([
         globalConfig.css + '/**/*.css',
+        globalConfig.css + '/**/*.scss',
         globalConfig.js_concat + '/**/*.js',
         globalConfig.js_min + '/**/*.js',
         globalConfig.img_min + '/**/*',
-        globalConfig.img_sprites + '/sprite-*-*.png'
+        globalConfig.img_sprites + '/sprites-*.png'
     ], { read: false })
     .pipe(clean());
 });
 
+gulp.task('spritesmith:deco', () => {
+    var spriteData = gulp.src(globalConfig.img_sprites + '/deco/**/*')
+        .pipe(spritesmith({
+            imgName: 'sprites-deco.png',
+            cssName: '_sprites-deco.scss'
+        }));
+    spriteData.img.pipe(gulp.dest(globalConfig.img_sprites));
+    spriteData.css.pipe(gulp.dest(globalConfig.scss + '/includes'));
+});
+
+gulp.task('spritesmith:icn', () => {
+    var spriteData = gulp.src(globalConfig.img_sprites + '/icn/**/*')
+        .pipe(spritesmith({
+            imgName: 'sprites-icn.png',
+            cssName: '_sprites-icn.scss'
+        }));
+    spriteData.img.pipe(gulp.dest(globalConfig.img_sprites));
+    spriteData.css.pipe(gulp.dest(globalConfig.scss + '/includes'));
+});
+
+gulp.task('sprites', [
+    'spritesmith:deco',
+    'spritesmith:icn'
+]);
+
 gulp.task('common', [
+    'sprites',
     'js:concat',
     'js:uglify',
     'sass'
@@ -114,6 +148,6 @@ gulp.task('dev', [
     'watch'
 ]);
 
-gulp.task('default', () => {
-    console.log(globalConfig.js_concat);
-});
+gulp.task('default', [
+    'common'
+]);
