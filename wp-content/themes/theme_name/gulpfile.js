@@ -1,4 +1,7 @@
+'use strict';
+
 var gulp            = require('gulp'),
+    plugins         = require('gulp-load-plugins')(),
     sass            = require('gulp-sass'),
     sourcemaps      = require('gulp-sourcemaps'),
     concat          = require('gulp-concat'),
@@ -12,7 +15,10 @@ var gulp            = require('gulp'),
     newer           = require('gulp-newer'),
     livereload      = require('gulp-livereload');
 
-var timestamp = new Date().getTime();
+var timestamp       = new Date().getTime();
+
+var taskPath        = './gulp-tasks/',
+    taskList        = require('fs').readdirSync(taskPath);
 
 var globalConfig = new function() {
     this.project         = 'theme_name',
@@ -39,7 +45,16 @@ var globalConfig = new function() {
     this.timestamp       = timestamp
 };
 
+exports.globalConfig    = globalConfig;
+exports.gulp            = gulp;
+
 // requireDir('./gulp-tasks', { recursive: true });
+
+taskList.forEach(function (taskFile) {
+    // or .call(gulp,...) to run this.task('foobar')...
+    require(taskPath + taskFile)(gulp, plugins);
+    console.log(taskFile);
+});
 
 gulp.task('imagemin', () => {
     return gulp.src(globalConfig.img_src + '/**/*')
@@ -48,28 +63,28 @@ gulp.task('imagemin', () => {
         .pipe(gulp.dest(globalConfig.img_min));
 });
 
-gulp.task('sass', () => {
-    gulp.src([
-        globalConfig.scss + '/app.scss',
-        globalConfig.scss + '/admin.scss'
-    ])
-    .pipe(sourcemaps.init())
-    .on('error', function(err){
-       displayError(err); // ** Show any errors and continue compiling
-    })
-    .pipe(sass({
-        outputStyle: 'compressed',
-        sourceComments: 'map',
-        includePaths: [
-            globalConfig.bower + '/foundation/scss/',
-            globalConfig.bower + '/owl-carousel2/src/scss'
-        ]
-    }))
-    .pipe(sourcemaps.write())
-    // .pipe(sourcemaps.write('./maps')) ** Declare path of map file if neeeded
-    .pipe(gulp.dest(globalConfig.css))
-    .pipe(livereload());
-})
+// gulp.task('sass', () => {
+//     gulp.src([
+//         globalConfig.scss + '/app.scss',
+//         globalConfig.scss + '/admin.scss'
+//     ])
+//     .pipe(sourcemaps.init())
+//     .on('error', function(err){
+//        displayError(err); // ** Show any errors and continue compiling
+//     })
+//     .pipe(sass({
+//         outputStyle: 'compressed',
+//         sourceComments: 'map',
+//         includePaths: [
+//             globalConfig.bower + '/foundation/scss/',
+//             globalConfig.bower + '/owl-carousel2/src/scss'
+//         ]
+//     }))
+//     .pipe(sourcemaps.write())
+//     // .pipe(sourcemaps.write('./maps')) ** Declare path of map file if neeeded
+//     .pipe(gulp.dest(globalConfig.css))
+//     .pipe(livereload());
+// })
 
 gulp.task('serve', () => {
     var express = require('express');
