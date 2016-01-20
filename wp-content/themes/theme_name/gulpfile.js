@@ -15,9 +15,6 @@ var gulp            = require('gulp'),
 
 var timestamp       = new Date().getTime();
 
-var taskPath        = './gulp-tasks/',
-    taskList        = require('fs').readdirSync(taskPath);
-
 var globalConfig = new function() {
     this.project         = 'theme_name',
     this.assets          = 'assets',
@@ -46,14 +43,16 @@ var globalConfig = new function() {
 exports.globalConfig    = globalConfig;
 exports.gulp            = gulp;
 
-// requireDir('./gulp-tasks', { recursive: true });
+
+// * Loop over files in the '/gulp-tasks' directory
+var taskPath        = './gulp-tasks/',
+    taskList        = require('fs').readdirSync(taskPath);
 
 taskList.forEach(function (taskFile) {
-    // or .call(gulp,...) to run this.task('foobar')...
     require(taskPath + taskFile)(gulp, plugins);
-    console.log(taskFile);
 });
 
+// * Gulp Tasks
 gulp.task('serve', () => {
     var express = require('express');
     var app     = express();
@@ -61,64 +60,6 @@ gulp.task('serve', () => {
     app.listen(4000, function(){
         done();
     });
-});
-
-gulp.task('js:concat', () => {
-    return gulp.src([
-        globalConfig.js_custom + '/jquery-start.js',
-        globalConfig.js_custom + '/jquery-end.js',
-        globalConfig.js_custom + '/functions/*.js',
-        globalConfig.js_custom + '/doc-ready.js',
-        globalConfig.vendor + '/*.js'
-    ])
-    .pipe(sourcemaps.init())
-    .pipe(newer(globalConfig.js_concat + '/app.js'))
-    .pipe(concat('app.js'))
-    .pipe(sourcemaps.write())
-    .pipe(gulp.dest(globalConfig.js_concat))
-    .pipe(livereload());
-});
-
-gulp.task('js:uglify', () => {
-    return gulp.src(globalConfig.js_concat + '/*.js')
-    .pipe(uglify().on('error', gutil.log))
-    .pipe(rename({
-        extname: '.min.js'
-    }))
-    .pipe(gulp.dest(globalConfig.js_min));
-});
-
-gulp.task('clean', () => {
-    return gulp.src([
-        globalConfig.css + '/**/*.css',
-        globalConfig.js_concat + '/**/*.js',
-        globalConfig.js_min + '/**/*.js',
-        globalConfig.img_min + '/**/*',
-        globalConfig.img_sprites + '/sprites-*.png'
-    ], { read: false })
-    .pipe(clean());
-});
-
-gulp.task('spritesmith:deco', () => {
-    var spriteData = gulp.src(globalConfig.img_sprites + '/deco/**/*')
-        .pipe(spritesmith({
-            imgName: 'sprites-deco.png',
-            cssName: '_sprites-deco.scss'
-        }));
-    spriteData.img.pipe(gulp.dest(globalConfig.img_sprites));
-    spriteData.css.pipe(gulp.dest(globalConfig.scss + '/includes'))
-    .pipe(livereload());
-});
-
-gulp.task('spritesmith:icn', () => {
-    var spriteData = gulp.src(globalConfig.img_sprites + '/icn/**/*')
-        .pipe(spritesmith({
-            imgName: 'sprites-icn.png',
-            cssName: '_sprites-icn.scss'
-        }));
-    spriteData.img.pipe(gulp.dest(globalConfig.img_sprites));
-    spriteData.css.pipe(gulp.dest(globalConfig.scss + '/includes'))
-    .pipe(livereload());
 });
 
 gulp.task('sprites', [
