@@ -1,16 +1,16 @@
 {
   "name": "theme_name",
   "version": "0.1.0",
-  "author": "Alex Windett alex@bigfish.co.uk",
+  "author": "Alex Windett windettalex@gmail.com",
   "contributors": [
     {
       "name": "Alex",
-      "email": "alex@bigfish.co.uk"
+      "email": "windettalex@gmail.com"
     }
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/bigfishdesign"
+    "url": "https://github.com/alex-windett"
   },
   "dependencies": {
     "grunt": "^0.4.5",
