@@ -12,12 +12,13 @@ module.exports = function(gulp, $) {
         gulp.watch([
             sourceFile.globalConfig.scss + '/**/*.scss',
             sourceFile.globalConfig.js + '/**/*.js',
-            sourceFile.globalConfig.img_sprites + '/*.png'
+            sourceFile.globalConfig.img_sprites + '/icn/*',
+            sourceFile.globalConfig.img_sprites + '/deco/*'
             // sourceFile.globalConfig.img_src + '/**/*'
         ], [
             'sass',
             'js:concat',
-            // 'sprites',
+            'sprites',
             // 'imagemin'
         ])
         .on('change', function(event) {
