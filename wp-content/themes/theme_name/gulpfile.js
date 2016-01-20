@@ -1,18 +1,8 @@
 'use strict';
 
 var gulp            = require('gulp'),
-    plugins         = require('gulp-load-plugins')(),
-    sourcemaps      = require('gulp-sourcemaps'),
-    concat          = require('gulp-concat'),
-    uglify          = require('gulp-uglify'),
-    rename          = require('gulp-rename'),
-    gutil           = require('gulp-util'),
-    clean           = require('gulp-clean'),
-    spritesmith     = require('gulp.spritesmith'),
-    requireDir      = require('require-dir'),
-    newer           = require('gulp-newer'),
-    livereload      = require('gulp-livereload');
-
+    plugins         = require('gulp-load-plugins')();
+    
 var timestamp       = new Date().getTime();
 
 var globalConfig = new function() {
