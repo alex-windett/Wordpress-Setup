@@ -2,7 +2,6 @@
 
 var gulp            = require('gulp'),
     plugins         = require('gulp-load-plugins')(),
-    sass            = require('gulp-sass'),
     sourcemaps      = require('gulp-sourcemaps'),
     concat          = require('gulp-concat'),
     uglify          = require('gulp-uglify'),
@@ -11,7 +10,6 @@ var gulp            = require('gulp'),
     clean           = require('gulp-clean'),
     spritesmith     = require('gulp.spritesmith'),
     requireDir      = require('require-dir'),
-    imagemin        = require('gulp-imagemin'),
     newer           = require('gulp-newer'),
     livereload      = require('gulp-livereload');
 
@@ -54,13 +52,6 @@ taskList.forEach(function (taskFile) {
     // or .call(gulp,...) to run this.task('foobar')...
     require(taskPath + taskFile)(gulp, plugins);
     console.log(taskFile);
-});
-
-gulp.task('imagemin', () => {
-    return gulp.src(globalConfig.img_src + '/**/*')
-        .pipe(newer(globalConfig.img_min))
-        .pipe(imagemin({ progressive: true }))
-        .pipe(gulp.dest(globalConfig.img_min));
 });
 
 // gulp.task('sass', () => {
