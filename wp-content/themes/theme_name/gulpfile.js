@@ -2,7 +2,7 @@
 
 var gulp            = require('gulp'),
     plugins         = require('gulp-load-plugins')();
-    
+
 var timestamp       = new Date().getTime();
 
 var globalConfig = new function() {
@@ -34,7 +34,7 @@ exports.globalConfig    = globalConfig;
 exports.gulp            = gulp;
 
 
-// * Loop over files in the '/gulp-tasks' directory
+// * Loop over files in the './gulp-tasks/' directory
 var taskPath        = './gulp-tasks/',
     taskList        = require('fs').readdirSync(taskPath);
 
@@ -53,6 +53,7 @@ gulp.task('serve', () => {
 });
 
 gulp.task('sprites', [
+    // * Created task to laod both spritesmith tasks
     'spritesmith:deco',
     'spritesmith:icn'
 ]);
@@ -70,6 +71,6 @@ gulp.task('dev', [
 ]);
 
 gulp.task('default', [
-    'imagemin', // includes the "newer" task already
+    'imagemin', // * includes the "newer" task already
     'common'
 ]);

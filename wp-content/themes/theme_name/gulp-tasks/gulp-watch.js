@@ -9,19 +9,20 @@ module.exports = function(gulp, $) {
 
     gulp.task('watch', () => {
         livereload.listen();
+        // * The files to watch
         gulp.watch([
             sourceFile.globalConfig.scss + '/**/*.scss',
             sourceFile.globalConfig.js + '/**/*.js',
             sourceFile.globalConfig.img_sprites + '/icn/*',
             sourceFile.globalConfig.img_sprites + '/deco/*'
-            // sourceFile.globalConfig.img_src + '/**/*'
         ], [
+            // * The tasks to be run on the above files
             'sass',
             'js:concat',
-            'sprites',
-            // 'imagemin'
+            'sprites'
         ])
         .on('change', function(event) {
+            // * Display which file was changed
             console.log('File' + event.path + ' was ' + event.type + ', running tasks...' );
         });
     });

@@ -8,12 +8,16 @@ module.exports = function(gulp, $) {
 
     gulp.task('clean', () => {
         return gulp.src([
+            // * The paths to be clenaed
             sourceFile.globalConfig.css + '/**/*.css',
             sourceFile.globalConfig.js_concat + '/**/*.js',
             sourceFile.globalConfig.js_min + '/**/*.js',
             sourceFile.globalConfig.img_min + '/**/*',
             sourceFile.globalConfig.img_sprites + '/sprites-*.png'
-        ], { read: false })
+        ], {
+            // * Fales - Don't read the rest of the Gulp file
+            read: false
+        })
         .pipe(clean());
     });
 }
